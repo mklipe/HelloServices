@@ -29,6 +29,7 @@ using Nancy.Diagnostics;
 using Funq;
 using ServiceStack.ServiceHost;
 using ServiceStack.WebHost.Endpoints;
+using Nancy.TinyIoc;
 
 namespace HelloServices
 {
@@ -61,7 +62,7 @@ namespace HelloServices
     {
 
 
-        protected override void ApplicationStartup (TinyIoC.TinyIoCContainer container, IPipelines pipelines)
+        protected override void ApplicationStartup (TinyIoCContainer container, IPipelines pipelines)
         {
 #if (DEBUG)
             base.ApplicationStartup (container, pipelines);
