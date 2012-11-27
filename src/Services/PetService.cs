@@ -72,8 +72,27 @@ namespace HelloServices
             }
             return (from n in PetDatabase.Instace.Pets 
                 where n.Id == dog.Id
-                select  n).SingleOrDefault ();
+                select  n)..SingleOrDefault ();
         }
+
+        public override object OnDelete(Dog request)
+        {
+
+            return base.OnDelete(request);
+        }
+
+        public override object OnPost(Dog request)
+        {
+            return base.OnPost(request);
+        }
+
+        public override object OnPut(Dog request)
+        {
+            PetDatabase.Instace.Pets.Add(new Dog() { Name = "JavaScript", Id = Guid.NewGuid() });
+            
+            return base.OnPut(request);
+        }
+
     }
 
     [Route("/cats")]
