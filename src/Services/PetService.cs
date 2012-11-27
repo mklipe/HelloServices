@@ -43,10 +43,10 @@ namespace HelloServices
         public override object OnGet (Pet pet)
         {
             if (pet.Id == Guid.Empty) {
-                return from n in PetDatabase.Instace.Pets 
+                return from n in PetDatabase.Instance.Pets 
                     select n;
             }
-            return (from n in PetDatabase.Instace.Pets 
+            return (from n in PetDatabase.Instance.Pets 
                    where n.Id == pet.Id
                    select n).SingleOrDefault();
         }
@@ -66,31 +66,32 @@ namespace HelloServices
         public override object OnGet (Dog dog)
         {
          if (dog.Id == Guid.Empty) {
-                return from n in PetDatabase.Instace.Pets 
+                return from n in PetDatabase.Instance.Pets 
                     where n.GetType () == typeof(Dog)
                     select n;
             }
-            return (from n in PetDatabase.Instace.Pets 
+            return (from n in PetDatabase.Instance.Pets 
                 where n.Id == dog.Id
-                select  n)..SingleOrDefault ();
+                select  n).SingleOrDefault ();
         }
 
         public override object OnDelete(Dog request)
         {
-
-            return base.OnDelete(request);
+            PetDatabase.Instance.Pets.Remove(request);
+            return request;
         }
 
         public override object OnPost(Dog request)
         {
-            return base.OnPost(request);
+            PetDatabase.Instance.Pets.Add(request);
+            return request;
         }
 
         public override object OnPut(Dog request)
         {
-            PetDatabase.Instace.Pets.Add(new Dog() { Name = "JavaScript", Id = Guid.NewGuid() });
+            PetDatabase.Instance.Pets.Add(request);
             
-            return base.OnPut(request);
+            return request;
         }
 
     }
@@ -109,11 +110,11 @@ namespace HelloServices
         public override object OnGet (Cat cat)
         {
          if (cat.Id == Guid.Empty) {
-                return from n in PetDatabase.Instace.Pets 
+                return from n in PetDatabase.Instance.Pets 
                     where n.GetType () == typeof(Cat)
                     select n;
             }
-            return (from n in PetDatabase.Instace.Pets 
+            return (from n in PetDatabase.Instance.Pets 
                 where n.Id == cat.Id
                 select  n).SingleOrDefault ();
         }
@@ -133,11 +134,11 @@ namespace HelloServices
         public override object OnGet (Parrot parrot)
         {
          if (parrot.Id == Guid.Empty) {
-                return from n in PetDatabase.Instace.Pets 
+                return from n in PetDatabase.Instance.Pets 
                     where n.GetType () == typeof(Parrot)
                     select n;
             }
-            return (from n in PetDatabase.Instace.Pets 
+            return (from n in PetDatabase.Instance.Pets 
                 where n.Id == parrot.Id
                 select  n).SingleOrDefault ();
         }
@@ -164,7 +165,7 @@ namespace HelloServices
 //                return from n in PetDatabase.Instace.Pets 
 //                    select n;
 //            }
-            return from n in PetDatabase.Instace.Pets 
+            return from n in PetDatabase.Instance.Pets 
                 where n.GetType ().Name.ToLower() == pets.PetType.ToLower()
                 select n;
         }
@@ -185,7 +186,7 @@ namespace HelloServices
             get { return _pets;}
         }
 
-        public static PetDatabase Instace {
+        public static PetDatabase Instance {
             get {
                 if (_instance == null) {
                     lock (_lock) {
