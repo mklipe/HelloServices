@@ -3,6 +3,7 @@
 //
 // Author:
 //       Tony Alexander Hild <tony_hild@yahoo.com>
+//       Mauricio Klipe <mklipe@yahoo.com.br>
 //
 // Copyright (c) 2012 
 //
@@ -34,8 +35,6 @@ using ServiceStack.ServiceInterface;
 namespace HelloServices
 {
 
-    
-   
     /// <summary>
     /// Create your ServiceStack web service implementation.
     /// </summary>
