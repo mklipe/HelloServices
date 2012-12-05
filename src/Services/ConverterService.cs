@@ -1,7 +1,8 @@
 ﻿//
-// PetService.cs
+// ConverterService.cs
+// This WebService accepts an arabic number and convert it in roman numbers
 //
-// Author:
+// Authors:
 //       Mauricio Klipe <mklipe@yahoo.com.br>
 //       Alex Wargenhak <alex_wargenhak@yahoo.com.br>
 //       Johnny C. Siebeniehcler <johnny_jacare@gmail.com>
@@ -48,19 +49,84 @@ namespace GestUAB.Services
 
                 String convertedValue = "";
                 
-                x = x.PadLeft(4, '0');
+                x = x.PadLeft(6, '0');
                 int value = 0;
                 try
                 {
                     value = Convert.ToInt32(x);
-                    if (value > 4999)
+                    if (value > 999999)
                     {
                         convertedValue = "Wrong Input";
                     }
+                    else if (value == 0)
+                        convertedValue = "Nulla";
                     else
                     {
-
                         switch (x[0])
+                        {
+                        case '1':
+                            convertedValue += "C&#773;";
+                            break;
+                        case '2':
+                            convertedValue += "C&#773;C&#773;";
+                            break;
+                        case '3':
+                            convertedValue += "C&#773;C&#773;C&#773;";
+                            break;
+                        case '4':
+                            convertedValue += "C&#773;D&#773;";
+                            break;
+                        case '5':
+                            convertedValue += "D&#773;";
+                            break;
+                        case '6':
+                            convertedValue += "D&#773;C&#773;";
+                            break;
+                        case '7':
+                            convertedValue += "D&#773;C&#773;C&#773;";
+                            break;
+                        case '8':
+                            convertedValue += "D&#773;C&#773;C&#773;C&#773;";
+                            break;
+                        case '9':
+                            convertedValue += "C&#773;M&#773;";
+                            break;
+                            
+                        }
+                        
+                        switch (x[1])
+                        {
+                        case '1':
+                            convertedValue += "X&#773;";
+                            break;
+                        case '2':
+                            convertedValue += "X&#773;X&#773;";
+                            break;
+                        case '3':
+                            convertedValue += "X&#773;X&#773;X&#773;";
+                            break;
+                        case '4':
+                            convertedValue += "X&#773;L&#773;";
+                            break;
+                        case '5':
+                            convertedValue += "L&#773;";
+                            break;
+                        case '6':
+                            convertedValue += "L&#773;X&#773;";
+                            break;
+                        case '7':
+                            convertedValue += "L&#773;X&#773;X&#773;";
+                            break;
+                        case '8':
+                            convertedValue += "L&#773;X&#773;X&#773;X&#773;";
+                            break;
+                        case '9':
+                            convertedValue += "X&#773;C&#773;";
+                            break;
+                            
+                        }
+                        
+                        switch (x[2])
                         {
                             case '1':
                                 convertedValue += "M";
@@ -72,11 +138,27 @@ namespace GestUAB.Services
                                 convertedValue += "MMM";
                                 break;
                             case '4':
-                                convertedValue += "MMMM";
+                                convertedValue += "MV&#773;";
                                 break;
+                            case '5':
+                                convertedValue += "V&#773;";
+                                break;
+                            case '6':
+                                convertedValue += "V&#773;M";
+                                break;
+                            case '7':
+                                convertedValue += "V&#773;MM";
+                                break;
+                            case '8':
+                                convertedValue += "V&#773;MMM";
+                                break;
+                            case '9':
+                                convertedValue += "MX&#773;";
+                                break;
+                           
                         }
 
-                        switch (x[1])
+                        switch (x[3])
                         {
                             case '1':
                                 convertedValue += "C";
@@ -107,7 +189,7 @@ namespace GestUAB.Services
                                 break;
                         }
 
-                        switch (x[2])
+                        switch (x[4])
                         {
                             case '1':
                                 convertedValue += "X";
@@ -138,7 +220,7 @@ namespace GestUAB.Services
                                 break;
                         }
 
-                        switch (x[3])
+                        switch (x[5])
                         {
                             case '1':
                                 convertedValue += "I";
