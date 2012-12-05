@@ -42,16 +42,25 @@ namespace HelloServices
     {
         public override object OnGet (Pet pet)
         {
+            var total = PetDatabase.Instance.Pets.Count();
+            var page = int.Parse(Request.QueryString["page"]);
+            var perPage = int.Parse(Request.QueryString["perpage"]);
+            //var totalOfPages = (int)(total/perPage);
+        
             if (pet.Id == Guid.Empty) {
-                return from n in PetDatabase.Instance.Pets 
+                return from n in PetDatabase.Instance.Pets.
+                    Skip((page - 1) * perPage).
+                    Take(perPage) 
                     select n;
             }
+            
+            
             return (from n in PetDatabase.Instance.Pets 
                    where n.Id == pet.Id
                    select n).SingleOrDefault();
         }
     }
-
+    
     [Route("/dogs")]
     [Route("/dogs/{Id}")]
     public class Dog : Pet
@@ -75,23 +84,25 @@ namespace HelloServices
                 select  n).SingleOrDefault ();
         }
 
-        public override object OnDelete(Dog request)
+        public override object OnPost (Dog request)
+        {
+            PetDatabase.Instance.Pets.Add(request);
+            return request;
+        }
+        
+        public override object OnPut (Dog request)
+        {
+            Dog dog = (from n in PetDatabase.Instance.Pets 
+                        where request.Id == n.Id
+                        select  n).SingleOrDefault() as Dog;
+            dog.Name = request.Name;
+            return dog;
+        }
+        
+        public override object OnDelete (Dog request)
         {
             PetDatabase.Instance.Pets.Remove(request);
-            return request;
-        }
-
-        public override object OnPost(Dog request)
-        {
-            PetDatabase.Instance.Pets.Add(request);
-            return request;
-        }
-
-        public override object OnPut(Dog request)
-        {
-            PetDatabase.Instance.Pets.Add(request);
-            
-            return request;
+            return PetDatabase.Instance.Pets;
         }
 
     }
@@ -118,6 +129,77 @@ namespace HelloServices
                 where n.Id == cat.Id
                 select  n).SingleOrDefault ();
         }
+        
+        public override object OnPost (Cat request)
+        {
+            PetDatabase.Instance.Pets.Add(request);
+            return request;
+        }
+        
+        public override object OnPut (Cat request)
+        {
+            Cat cat = (from n in PetDatabase.Instance.Pets 
+                       where request.Id == n.Id
+                       select  n).SingleOrDefault() as Cat;
+            cat.Name = request.Name;
+            return cat;
+        }
+        
+        public override object OnDelete (Cat request)
+        {
+            PetDatabase.Instance.Pets.Remove(request);
+            return PetDatabase.Instance.Pets;
+        }
+    }
+
+
+    [Route("/old/cats")]
+    [Route("/old/cats/{Id}")]
+    public class OldCat : Cat
+    {
+        public int Age { get; set; }
+        public String Owner { get; set; }
+    }
+        
+    /// <summary>
+    /// Create your ServiceStack web service implementation.
+    /// </summary>
+    public class OldCatService : RestServiceBase<OldCat>
+    {
+        public override object OnGet (OldCat cat)
+        {
+            if (cat.Id == Guid.Empty) {
+                return from n in PetDatabase.Instance.Pets 
+                    where n.GetType () == typeof(OldCat)
+                        select n;
+            }
+            return (from n in PetDatabase.Instance.Pets 
+                    where n.Id == cat.Id
+                    select  n).SingleOrDefault ();
+        }
+        
+        public override object OnPost (OldCat request)
+        {
+            PetDatabase.Instance.Pets.Add(request);
+            return request;
+        }
+        
+        public override object OnPut (OldCat request)
+        {
+            OldCat cat = (from n in PetDatabase.Instance.Pets 
+                       where request.Id == n.Id
+                       select  n).SingleOrDefault() as OldCat;
+            cat.Name = request.Name;
+            cat.Age = request.Age;
+            cat.Owner = cat.Owner;
+            return cat;
+        }
+        
+        public override object OnDelete (OldCat request)
+        {
+            PetDatabase.Instance.Pets.Remove(request);
+            return PetDatabase.Instance.Pets;
+        }
     }
 
     [Route("/parrots")]
@@ -142,6 +224,28 @@ namespace HelloServices
                 where n.Id == parrot.Id
                 select  n).SingleOrDefault ();
         }
+        
+        public override object OnPost (Parrot request)
+        {
+            PetDatabase.Instance.Pets.Add(request);
+            return request;
+        }
+        
+        public override object OnPut (Parrot request)
+        {
+            Parrot parrot = (from n in PetDatabase.Instance.Pets 
+                          where request.Id == n.Id
+                             select  n).SingleOrDefault() as Parrot;
+            parrot.Name = request.Name;
+            return parrot;
+        }
+        
+        public override object OnDelete (Parrot request)
+        {
+            PetDatabase.Instance.Pets.Remove(request);
+            return PetDatabase.Instance.Pets;
+        }
+        
     }
    
 
@@ -196,7 +300,8 @@ namespace HelloServices
                         _instance._pets.Add (new Dog (){Name = "Mike", Id = Guid.NewGuid()});
                         _instance._pets.Add (new Cat (){Name = "Kitty", Id = Guid.NewGuid()});
                         _instance._pets.Add (new Cat (){Name = "Mimi", Id = Guid.NewGuid()});
-                        _instance._pets.Add (new Cat (){Name = "FurBall", Id = Guid.NewGuid()});
+                        _instance._pets.Add (new OldCat (){Name = "FurBall", Id = Guid.NewGuid() , Age = 10, Owner = "Mauricio"});
+                        _instance._pets.Add (new OldCat (){Name = "Bisteca", Id = Guid.NewGuid() , Age = 3, Owner = "Joaquim"});
                         _instance._pets.Add (new Parrot (){Name = "Polly", Id = Guid.NewGuid()});
                         _instance._pets.Add (new Parrot (){Name = "Rico", Id = Guid.NewGuid()});
                     }
